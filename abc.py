@@ -7,11 +7,12 @@ import urllib.request
 import os
 def millis():
     return int(round(time_.time() * 1000))
+#change root path to save the data
 root = "D:/ML-Workspace/Dataset For damaged  cars/Data"
 copart = "https://www.copart.com"
 driver = webdriver.Chrome("C:/Users/HP/Downloads/chromedriver_win32/chromedriver")
 count=0
-for i in range(2,1000):
+for i in range(5):
     driver.get("https://www.copart.com/lotSearchResults/?free=true&query=toyota&page="+str(i))
     time.sleep(2)
     content = driver.page_source
@@ -22,13 +23,11 @@ for i in range(2,1000):
     for i in tr:
         imageurl = i.find('div',attrs={'class':'viewallphotos'})
         spans = i.findAll('span')
-        #print(spans[-4].text)
         fn = spans[-4].text
         directory = root+"/"+fn
         if not os.path.exists(directory):
             os.makedirs(directory)
         imagelink = imageurl.find('a',class_='image_viewer_link')['data-url']
-        #print(imagelink[1:])
         driver.get(copart+imagelink[1:])
         time.sleep(2)
         c = driver.page_source
@@ -37,8 +36,6 @@ for i in range(2,1000):
         for i in tr:
             imgsrc = i.find('img')['src']
             title  = i.find('img')['title']
-            #print(imgsrc)
-            #print(title)
             val = millis()
             count=count+1
             filename = title +"-"+str(val)+".jpg"
